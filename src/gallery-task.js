@@ -64,20 +64,54 @@ const galleryItems = [
   },
 ];
 
-const createGalleryMarkup = galleryItems.map((item) => {
-   return `<li class="gallery__item">
- <a
-   class="gallery__link"
-   href="https://cdn.pixabay.com/photo/2010/12/13/10/13/tulips-2546_1280.jpg"
- >
-   <img
-     class="gallery__image"
-     src="https://cdn.pixabay.com/photo/2010/12/13/10/13/tulips-2546__340.jpg"
-     data-source="https://cdn.pixabay.com/photo/2010/12/13/10/13/tulips-2546_1280.jpg"
-     alt="Tulips"
-   />
- </a>
-</li>`
-  });
+const galleryContainer = document.querySelector('.js-gallery');
+const galleryMarkup = createGalleryMarkup(galleryItems);
+const modalImg = document.querySelector('.lightbox__image')
+const originalImg = document.querySelector('.gallery__link');
+const modal = document.querySelector('.lightbox');
+const closeModalButton = document.querySelector('.lightbox__button');
+const overlay = document.querySelector('.lightbox__overlay');
 
-console.log(createGalleryMarkup);
+galleryContainer.insertAdjacentHTML("afterbegin", galleryMarkup);
+
+galleryContainer.addEventListener('click', onImageClick);
+
+closeModalButton.addEventListener('click', onCloseModalButtonClick);
+
+overlay.addEventListener('click', onCloseModalButtonClick);
+
+function createGalleryMarkup(galleryItems) {
+  return galleryItems
+  .map(({preview,original,description}) => {
+    return `<li class="gallery__item">
+  <a
+    class="gallery__link"
+    href="${original}"
+  >
+    <img
+      class="gallery__image"
+      src="${preview}"
+      data-source="${original}"
+      alt="${description}"
+    />
+  </a>
+ </li>`
+   }).join('');
+  };
+function onImageClick(evt) {
+  if (evt.target.nodeName !== 'IMG') {
+    return;
+  };
+
+  modal.classList.add('is-open');
+
+  modalImg.src = evt.target.source;
+  modalImg.alt = evt.target.alt;
+
+};
+function onCloseModalButtonClick() {
+  modal.classList.remove('is-open');
+
+  modalImg.src = "";
+  modalImg.alt = "";
+};
