@@ -99,13 +99,15 @@ function createGalleryMarkup(galleryItems) {
    }).join('');
   };
 function onImageClick(evt) {
+  evt.preventDefault();
+
   if (evt.target.nodeName !== 'IMG') {
     return;
   };
 
   modal.classList.add('is-open');
 
-  modalImg.src = evt.target.source;
+  modalImg.src = evt.target.dataset.source;
   modalImg.alt = evt.target.alt;
 
 };
